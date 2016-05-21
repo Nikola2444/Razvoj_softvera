@@ -6,5 +6,5 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void read_leds(int *val);
+char* read_leds();
 #endif

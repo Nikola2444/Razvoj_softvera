@@ -1,11 +1,11 @@
 #ifndef TASTER_LED_FUNCS_C
 #define TASTER_LED_FUNCS_C
 #include "./taster_led_funcs.h"
-void read_leds(int* val) {
+char* read_leds() {
   FILE* fp;
   float percentage;
   long int period = 20000L;
-  size_t num_of_bytes;
+  size_t num_of_bytes = 1;
   char *str;
     fp = fopen("/proc/myled", "r");
     if (fp == NULL) {
@@ -14,8 +14,7 @@ void read_leds(int* val) {
     }
     str = (char*)malloc(sizeof(char));
     getline(&str, &num_of_bytes, fp);
-    sscanf(str, "%d", val);
-    printf("led value is: %d", *val);
-    free(str);
+    printf("led value is: %s", str);
+    return  str;
 }
 #endif

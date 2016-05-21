@@ -11,21 +11,24 @@
 int main() {
   int led_value;
   FILE *html_data;
-  html_data = fopen("Index.html", "r");
+  html_data = fopen("Index.html", "w");
+  char *led_val;
+  char http_begin[100] = "<html><body>";
+  char http_end[100] = "</body></html>";
+  char http_full[100] = "";
 
-  char response_data[1024];
-  fgets(response_data, 1024, html_data);
+
 
   // response
   char http_header[2048] = "HTTP/1.1 200 OK\r\n\n";
-  strcat(http_header, response_data);
+  strcat(http_header, http_begin);
   // create a socketx
   int server_socket;
   server_socket = socket(AF_INET, SOCK_STREAM, 0);
   // define the address
   struct sockaddr_in server_address;
   server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(8001);
+  server_address.sin_port = htons(80);
   server_address.sin_addr.s_addr = INADDR_ANY;
 
   bind(server_socket, (struct sockaddr *) &server_address,
@@ -34,10 +37,18 @@ int main() {
   int client_socket;
   while (1) {
     client_socket = accept(server_socket, NULL, NULL);
-    printf("page refreshed\n");
-    read_leds(&led_value);
-    send(client_socket, http_header, sizeof(http_header), 0);
+    printf("\npage refreshed\n");    
+    led_val = read_leds();
+    printf("\nled_value is: %s", led_value);
+    fflush(stdout);
+    strcpy(http_full, http_header);
+    strcat(http_full, led_val);
+    strcat(http_full, http_end);
+    printf("\n%s", http_full);
+    fflush(stdout);
+    send(client_socket, http_full, sizeof(http_full), 0);    
     close(client_socket);
+
   }
   return 0;
 }
