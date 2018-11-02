@@ -44,6 +44,9 @@ void print_list(struct student_str *p_head)
    while(p_head != NULL)
    {
       printf("\nname is: %s", p_head->name);
+      printf("\nsurename is: %s", p_head->surename);
+      printf("\nindex num is: %s", p_head->index_num);
+      printf("\ngrades are: %s", p_head->grades);
       p_head = p_head->next;
    }
    

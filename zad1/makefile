@@ -17,7 +17,7 @@ student_registry: $(objs)
 	sed 's,    \($*\)\.o[ :]*     ,    \1.o $@ :   ,   g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 clean:
-	@rm -f student_registry *.o *.d* *~
+	@rm -f student_registry *.o *.d* *~ *\#
 	@rm *~
 	@echo "Clean done.."
 

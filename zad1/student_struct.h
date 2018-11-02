@@ -9,6 +9,6 @@ struct student_str
    struct student_str* next;
   
 };
-
+struct student_str *p_head_global;
 
 #endif
