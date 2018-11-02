@@ -1,10 +1,9 @@
 #ifndef MENU_FUNCTION_C
 #define MENU_FUNCTION_C
 #include "menu_functions.h"
-void registry ()
+void registry (struct student_str **p_head)
 {
    char option;
-   
    while(option!= 'E')
    {
       option = menu();
@@ -13,7 +12,13 @@ void registry ()
       switch(option)
       {
       case 'A':
-         enter_student();
+         enter_student(p_head);
+         break;
+      case 'B':
+         
+         break;
+      case 'C':
+         print_list(*p_head);
          break;
       }
    }
@@ -43,7 +48,7 @@ char menu()
    return chosen_option;
 }
 
-void enter_student ()
+void enter_student (struct student_str **p_head)
 {
    char *name;
    char *surename;
@@ -56,25 +61,25 @@ void enter_student ()
    if(name == NULL)
       printf("couldnt allocate memory for name");
    getline(&name, &num_of_bytes, stdin);
-   
+   name[strlen(name)-1] = '\0';
    printf("\nenter surename:");
    surename = (char *)malloc(sizeof(char));
    if(surename == NULL)
       printf("couldnt allocate memory for surename");
    getline(&surename, &num_of_bytes, stdin);
-   
+   surename[strlen(surename)-1] = '\0';
    printf("\nenter index_num:");
    index_num = (char *)malloc(sizeof(char));
    if(index_num == NULL)
       printf("couldnt allocate memory for index_num");
    getline(&index_num, &num_of_bytes, stdin);
-   
+   index_num[strlen(index_num)-1] = '\0';
    printf("\nenter grades:");
    grades = (char *)malloc(sizeof(char));
    if(grades == NULL)
       printf("couldnt allocate memory for grades");
    getline(&grades, &num_of_bytes, stdin);
-   
+   grades[strlen(grades)-1] = '\0';
    strcpy(s.name, name);
    strcpy(s.surename, surename);
    strcpy(s.index_num, index_num);
@@ -85,6 +90,6 @@ void enter_student ()
    free (grades);
    free (index_num);
             
-   student_to_list(&p_head_global, s);
+   student_to_list(p_head, s);
 }
 #endif

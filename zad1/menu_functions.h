@@ -5,7 +5,7 @@
 #include "student_struct.h"
 #include <string.h>
 #include "list_functions.h"
-void registry();
+void registry(struct student_str **p_head);
 char menu ();
-void enter_student();
+void enter_student(struct student_str **p_head);
 #endif

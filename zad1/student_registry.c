@@ -8,11 +8,14 @@ int main ()
 {
    
    struct student_str s1,s2;
-   p_head_global = NULL;
+   struct student_str *p_head = NULL;
+   
    int end_insertion = 1;
-   registry();
-   print_list(p_head_global);
-   clear_list(&p_head_global);
+   registry(&p_head);
+   print_list(p_head);
+   list_to_file(p_head);
+   clear_list(&p_head);
+   
    
    
    return 0;

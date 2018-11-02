@@ -38,15 +38,19 @@ void student_to_list(struct student_str **p_head, struct student_str student)
 }
 void print_list(struct student_str *p_head)
 {
-   
+   int i = 0;
    if (p_head == NULL)
       printf("\n list is empty");
+   p_head->name[strlen(p_head->name)-1] = '\0';
+   p_head->surename[strlen(p_head->surename)-1] = '\0';
+   p_head->index_num[strlen(p_head->index_num)-1] = '\0';
    while(p_head != NULL)
    {
-      printf("\nname is: %s", p_head->name);
-      printf("\nsurename is: %s", p_head->surename);
-      printf("\nindex num is: %s", p_head->index_num);
-      printf("\ngrades are: %s", p_head->grades);
+      i++;
+      printf("\n%d. First name: %s", i, p_head->name);
+      printf("    Last name: %s", p_head->surename);
+      printf("    Index number: %s", p_head->index_num);
+      printf("    Grades: %s", p_head->grades);
       p_head = p_head->next;
    }
    
@@ -90,5 +94,21 @@ void delete_node (struct student_str **p_head, int position)
 
    free (p_temp->next);
    p_temp ->next = next;
+}
+void list_to_file(struct student_str *p_head)
+{
+   char *my_string;
+   my_string = (char *)malloc(sizeof(char));
+   FILE *fp;
+   fp = fopen("registry.txt", "w");
+   int i = 0;
+   while(p_head != NULL)
+   {
+      i++;
+      asprintf (&my_string,"\n%d. First name: %s    Last name: %s   Index num: %s    Grades: %s", i, p_head->name, p_head->surename, p_head->index_num, p_head->grades);
+      fputs (my_string, fp);
+      free (my_string);
+      p_head = p_head->next;
+   }
 }
 #endif
