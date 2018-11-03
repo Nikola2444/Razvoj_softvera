@@ -41,13 +41,11 @@ void print_list(struct student_str *p_head)
    int i = 0;
    if (p_head == NULL)
       printf("\n list is empty");
+   printf ("\n\nSTUDENTS IN REGISTRY ARE:\n");
    while(p_head != NULL)
    {
       i++;
-      printf("\n%d. First name: %s", i, p_head->name);
-      printf("    Last name: %s", p_head->surename);
-      printf("    Index number: %s", p_head->index_num);
-      printf("    Grades: %s", p_head->grades);
+      printf ("\n%d. %s;%s;%s;%s\n", i, p_head->name, p_head->surename, p_head->index_num, p_head->grades);
       p_head = p_head->next;
    }
    
@@ -102,7 +100,7 @@ void list_to_file(struct student_str *p_head)
    while(p_head != NULL)
    {
       i++;
-      asprintf (&my_string,"%d. First name: %s    Last name: %s   Index num: %s    Grades: %s\n", i, p_head->name, p_head->surename, p_head->index_num, p_head->grades);
+      asprintf (&my_string,"%d. %s;%s;%s;%s\n", i, p_head->name, p_head->surename, p_head->index_num, p_head->grades);
       fputs (my_string, fp);      
       p_head = p_head->next;
    }
@@ -116,7 +114,9 @@ void list_from_file (struct student_str **p_head)
    size_t num_of_bytes = 1;
    struct student_str s;
    int i = 0;
-
+   char g1[5];
+   char g2[5];
+   char g3[5];
    
    fp = fopen ("registry.txt", "r");
    if (!fp)
@@ -133,7 +133,14 @@ void list_from_file (struct student_str **p_head)
    
    while(getline(&str, &num_of_bytes, fp) != EOF)
    {
-      sscanf(str, "%d. First name: %s    Last name: %s   Index num: %s    Grades: %s;",&i, s.name, s.surename, s.index_num, s.grades);
+      remove_commas(str);
+      sscanf(str, "%d. %s %s %s %s %s %s",&i, s.name, s.surename, s.index_num, g1, g2, g3);
+      strcpy(s.grades, g1);
+      strcat(s.grades, ",");
+      strcat(s.grades, g2);
+      strcat(s.grades, ",");
+      strcat(s.grades, g3);
+      strcat(s.grades, ";");
       student_to_list(p_head, s);
       
    }
@@ -142,7 +149,7 @@ void list_from_file (struct student_str **p_head)
 
 
 
-void update_student(struct student_str **p_head, int position, char field)
+int update_student(struct student_str **p_head, int position, char field)
 {
    struct student_str *p_current = *p_head;
    char *str;
@@ -157,20 +164,26 @@ void update_student(struct student_str **p_head, int position, char field)
    if (str == NULL)
    {
       printf ("\ncouldnt allocate space for student");
-      return;
+      return -1;
    }
-   
+   if(p_current == NULL)
+   {
+      printf ("list is empty");
+      return -1;
+   }
    for (int i = 0; i < position-1; ++i)
    {
       
+      p_current = p_current->next;
       if(p_current == NULL)
       {
-         printf ("\nthere is no student on that position, try again with another one");
-         return;
+         printf ("\nthere is no student on that position, try again with another one!!!!\n");
+         return -1;
       }
-      p_current = p_current->next;
-      print_list(p_current);
+      
    }
+   printf ("\nStudent you are changing is:");
+   printf("%s;%s;%s;%s", p_current->name,p_current->surename,p_current->index_num,p_current->grades );
    switch (field)
    {
    case 'A':
@@ -197,11 +210,40 @@ void update_student(struct student_str **p_head, int position, char field)
    case 'D':
       printf("\nEnter new grade 1:");
       getline(&str, &num_of_bytes, stdin);
+      remove_commas(p_current->grades);
+      printf ("%s", p_current->grades);
+      sscanf(p_current->grades, "%s %s %s;", g1, g2, g3);
       str[strlen(str)-1] = '\0';
-      
-      printf ("%s",p_current->grades);
-      strcpy(g1, str);
-    
+      strcpy(g1,str);
+      strcpy(p_current->grades, g1);
+      strcat(p_current->grades, ",");
+      strcat(p_current->grades, g2);
+      strcat(p_current->grades, ",");
+      strcat(p_current->grades, g3);
+      strcat(p_current->grades, ";");
+      break;
+   case 'E':
+      printf("\nEnter new grade 2:");
+      getline(&str, &num_of_bytes, stdin);
+      remove_commas(p_current->grades);
+      sscanf(p_current->grades, "%s %s %s;", g1, g2, g3);
+      str[strlen(str)-1] = '\0';
+      strcpy(g2,str);
+      strcpy(p_current->grades, g1);
+      strcat(p_current->grades, ",");
+      strcat(p_current->grades, g2);
+      strcat(p_current->grades, ",");
+      strcat(p_current->grades, g3);
+      strcat(p_current->grades, ";");
+
+      break;
+   case 'F':
+      printf("\nEnter new grade 3:");
+      getline(&str, &num_of_bytes, stdin);
+      remove_commas(p_current->grades);
+      sscanf(p_current->grades, "%s %s %s;", g1, g2, g3);
+      str[strlen(str)-1] = '\0';
+      strcpy(g3,str);
       strcpy(p_current->grades, g1);
       strcat(p_current->grades, ",");
       strcat(p_current->grades, g2);
@@ -213,5 +255,16 @@ void update_student(struct student_str **p_head, int position, char field)
       
    }      
    free (str);
+}
+char* remove_commas(char *grades)
+{
+   
+   for (int i = 0; i < strlen(grades); ++i)
+   {
+      if(grades[i] == ',' || grades[i]==';')
+         grades[i] = ' ';
+   }
+
+   return grades;
 }
 #endif
