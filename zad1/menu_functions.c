@@ -138,36 +138,10 @@ void update_student_info(struct student_str **p_head)
       printf("\nA: Name\nB: Surname\nC: Index number\nD: Grade 1\nE: Grade 2\nF: Grade 3\nG: Changes done\noption:");
       getline(&str, &num_of_bytes, stdin);
       sscanf(str, "%c", &option);
-      switch (option)
-      {
-      case 'A':
-         if(update_student(p_head, position, 'A')<0)
-            return;
-         break;
-      case 'B':
-         if(update_student(p_head, position, 'B')<0)
-            return;
-         break;
-      case 'C':
-         if(update_student(p_head, position, 'C')<0)
-            return;
-         break;
-      case 'D':
-         if(update_student(p_head, position, 'D')<0)
-            return;
-         break;
-      case 'E':
-         if(update_student(p_head, position, 'E')<0)
-            return;
-         break;
-      case 'F':
-         if(update_student(p_head, position, 'F')<0)
-            return;
-         break;
-      case  'G':
+      if(update_student(p_head, position, 'A')<0)
          return;
-         break;
-      }
+      if(option == 'G')
+         return;
    }
    free (str);
 }
