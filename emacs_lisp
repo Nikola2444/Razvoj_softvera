@@ -1,0 +1,54 @@
+(package-initialize)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(c-basic-offset 2)
+ '(custom-enabled-themes (quote (tango-dark)))
+ '(flymake-google-cpplint-command "cpplint")
+ '(global-linum-mode t)
+ '(inhibit-startup-screen t)
+ '(package-archives
+   (quote
+    (("melpa" . "http://melpa.milkbox.net/packages/")
+     ("gnu" . "http://elpa.gnu.org/packages/"))))
+ '(package-selected-packages
+   (quote
+    (arduino-mode yasnippet irony iedit google-c-style flymake-google-cpplint flymake-cursor egg auto-complete))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 136 :width normal :foundry "DAMA" :family "Ubuntu Mono")))))
+(put 'erase-buffer 'disabled nil)
+(setq-default indent-tabs-mode nil)
+;;load auto-complete
+(package-initialize)
+(require 'auto-complete)
+(require 'auto-complete-config)
+(ac-config-default)
+;;set a global key for goto-line
+(global-set-key (kbd"C-c j") 'goto-line)
+;;start yasnippet with emacs
+(require 'yasnippet)
+(yas-global-mode 1)
+;;fixing iedti
+(define-key global-map (kbd "C-c ;") 'iedit-mode)
+;;defining a function for flymake initialization
+(defun my:flymake-google-init()
+  (require 'flymake-google-cpplint)
+  (custom-set-variables
+   '(flymake-google-cpplint-command "cpplint"))
+  (flymake-google-cpplint-load)
+  )
+(add-hook 'c-mode-hook 'my:flymake-google-init)
+(add-hook 'c++-mode-hook 'my:flymake-google-init)
+(c-set-offset 'substatement-open 0) 
+
+(eval-after-load 'flymake '(require 'flymake-cursor))
+;;start google-c-style with emacs
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
