@@ -11,7 +11,7 @@ int main() {
   int server_socket, clilen;
   server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
-  //define the server adress
+  // define the server adress
   struct sockaddr_in server_address, client_addr;
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(9002);

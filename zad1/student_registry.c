@@ -13,7 +13,7 @@ int main ()
    int end_insertion = 1;
    list_from_file(&p_head);
    registry(&p_head);
-   //print_list(p_head);
+   print_list(p_head);
    list_to_file(p_head);
    clear_list(&p_head);
    
