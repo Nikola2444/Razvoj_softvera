@@ -7,8 +7,9 @@
 #include <netinet/in.h>
 #include <dirent.h>
 #include <unistd.h>
-
+#include "./taster_led_funcs.h"
 int main() {
+  int led_value;
   FILE *html_data;
   html_data = fopen("Index.html", "r");
 
@@ -33,6 +34,8 @@ int main() {
   int client_socket;
   while (1) {
     client_socket = accept(server_socket, NULL, NULL);
+    printf("page refreshed\n");
+    read_leds(&led_value);
     send(client_socket, http_header, sizeof(http_header), 0);
     close(client_socket);
   }

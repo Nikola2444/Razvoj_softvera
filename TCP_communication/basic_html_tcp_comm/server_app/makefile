@@ -1,9 +1,9 @@
 sources=$(wildcard *.c)
 objs=$(sources:.c=.o)
 
-all: client_app
+all: server_app
 
-client_app: $(objs)
+server_app: $(objs)
 	@echo "Building output binary.."
 	$(CC) -o $@ $(objs)
 %.o: %.c
@@ -17,7 +17,7 @@ client_app: $(objs)
 	sed 's,    \($*\)\.o[ :]*     ,    \1.o $@ :   ,   g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 clean:
-	@rm -f client_app *.o *.d* *~ *\#
+	@rm -f server_app *.o *.d* *~ *\#
 	@rm *~
 	@echo "Clean done.."
 
