@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
   // specify an address for the socket
   struct sockaddr_in server_address;
   server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(9002);
+  server_address.sin_port = htons(9000);
   if (argc != 2) {
     printf("\n Usage: %s <ip of server> \n", argv[0]);
     return 1;

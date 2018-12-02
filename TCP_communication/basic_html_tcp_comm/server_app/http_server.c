@@ -16,19 +16,21 @@ int main(int arcg, char **argv) {
   printf ("port value is: %d", port);
   fflush(stdout);
   int led_value;
+  int n;
   FILE *html_data;
   html_data = fopen("Index.html", "w");
   char led_val[10];
   char http_begin[100] = "<html><body>";
   char http_end[100] = "</body></html>";
   char http_full[100] = "";
-
+  int i = 0;
 
 
   // response
-  char http_header[2048] = "HTTP/1.0 200\r\n\n ";
+  char http_header[2048] = "HTTP/1.1 200 OK\r\nContent-Type: text/html;charset=UTF-8\r\n\r\n";
+  
   //char http_header[2048] = "";
-  //char http_header[2048] = "!DOCTYPE HTTP \r\n\n ";
+  //ochar http_header[2048] = "!DOCTYPE HTTP \r\n\n ";
   strcat(http_header, http_begin);
   // create a socketx
   int server_socket;
@@ -40,13 +42,17 @@ int main(int arcg, char **argv) {
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(port);
   server_address.sin_addr.s_addr = INADDR_ANY;
+  char buffer [255];
 
   bind(server_socket, (struct sockaddr *) &server_address,
        sizeof(server_address));
-  listen(server_socket, 5);
+  listen(server_socket, 15);
   int clilen = sizeof(client_address);
   while (1) {
     client_socket = accept(server_socket, (struct sockaddr*)& client_address, &clilen);
+    
+    
+    //usleep(100000);
     if (client_socket < 0) {
       printf("error on accept");
       //fflush(stdout);
@@ -61,9 +67,15 @@ int main(int arcg, char **argv) {
     }
     if (pid == 0) {
       close(server_socket);
-      printf ("\npid is: %d \n", pid);
-      fflush(stdout);
-      //printf("\nclient is trying to connect from address:%s;port: %d", inet_ntoa(client_address.sin_addr), client_address.sin_port);
+      //printf ("\npid is: %d \n", pid);
+      //fflush(stdout);
+      n = 255;
+      while(n == 255){
+        n = recv(client_socket, buffer, 255, 0);
+        printf("\nrecv is: %s", buffer);
+      }
+      printf("\nclient is trying to connect from address:%s;port: %d", inet_ntoa(client_address.sin_addr), client_address.sin_port);
+      //fflush(stdout);
       //printf("\npage refreshed\n");    
       read_leds(led_val);
       //printf("\nled_value is: %s", led_val);
@@ -73,11 +85,15 @@ int main(int arcg, char **argv) {
       strcat(http_full, http_end);
       //printf("\n%s", http_full);
       //fflush(stdout);
-      send(client_socket, http_full, sizeof(http_full), 0);    
+      
+      
+      write(client_socket, http_full, sizeof(http_full));     
+      
+      
       close(client_socket);
       exit(0);
-      //usleep(100000);
-      }
+      
+    }
     if(pid > 0){
       close(client_socket);
       continue;
