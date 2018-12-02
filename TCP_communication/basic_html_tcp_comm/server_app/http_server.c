@@ -18,19 +18,16 @@ int main(int arcg, char **argv) {
   int led_value;
   int n;
   FILE *html_data;
-  html_data = fopen("Index.html", "w");
   char led_val[10];
   char http_begin[100] = "<html><body>";
   char http_end[100] = "</body></html>";
   char http_full[100] = "";
   int i = 0;
-
+  char buffer [255];
 
   // response
   char http_header[2048] = "HTTP/1.1 200 OK\r\nContent-Type: text/html;charset=UTF-8\r\n\r\n";
   
-  //char http_header[2048] = "";
-  //ochar http_header[2048] = "!DOCTYPE HTTP \r\n\n ";
   strcat(http_header, http_begin);
   // create a socketx
   int server_socket;
@@ -42,7 +39,7 @@ int main(int arcg, char **argv) {
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(port);
   server_address.sin_addr.s_addr = INADDR_ANY;
-  char buffer [255];
+  
 
   bind(server_socket, (struct sockaddr *) &server_address,
        sizeof(server_address));
@@ -50,45 +47,31 @@ int main(int arcg, char **argv) {
   int clilen = sizeof(client_address);
   while (1) {
     client_socket = accept(server_socket, (struct sockaddr*)& client_address, &clilen);
-    
-    
-    //usleep(100000);
     if (client_socket < 0) {
-      printf("error on accept");
-      //fflush(stdout);
+      printf("error on accept");      
       continue;
     }
     int pid = fork();
-    
     
     if (pid < 0) {
       printf("fork didnt work");
       exit(1);
     }
     if (pid == 0) {
-      close(server_socket);
-      //printf ("\npid is: %d \n", pid);
-      //fflush(stdout);
+      close(server_socket);      
       n = 255;
+      // dummy receive from browser
       while(n == 255){
         n = recv(client_socket, buffer, 255, 0);
         printf("\nrecv is: %s", buffer);
       }
-      printf("\nclient is trying to connect from address:%s;port: %d", inet_ntoa(client_address.sin_addr), client_address.sin_port);
-      //fflush(stdout);
-      //printf("\npage refreshed\n");    
-      read_leds(led_val);
-      //printf("\nled_value is: %s", led_val);
-      //fflush(stdout);
+      printf("\nclient is trying to connect from address:%s;port: %d", inet_ntoa(client_address.sin_addr), client_address.sin_port);      
+      read_leds(led_val);   
       strcpy(http_full, http_header);
       strcat(http_full, led_val);
-      strcat(http_full, http_end);
-      //printf("\n%s", http_full);
-      //fflush(stdout);
-      
-      
-      write(client_socket, http_full, sizeof(http_full));     
-      
+      strcat(http_full, http_end);      
+      // writing to client      
+      write(client_socket, http_full, sizeof(http_full));           
       
       close(client_socket);
       exit(0);
